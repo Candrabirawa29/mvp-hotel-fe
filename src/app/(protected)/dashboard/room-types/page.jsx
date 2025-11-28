@@ -1,30 +1,25 @@
+// app/dashboard/room-types/page.jsx
 "use client"
-
 import { columns } from "./columns"
-import { getHotels } from "@/lib/services/hotel"
+import { getRoomTypes } from "@/lib/services/roomType"
 import { DataTable } from "@/components/common/data-table"
-import { HotelFilters } from "@/components/hotels/HotelFilters"
+import { RoomTypeFilters } from "@/components/room-types/RoomTypeFilters"
 import { useTableFilters } from "@/hooks/useTableFilters"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
 
-export default function HotelsTable() {
+export default function RoomTypesTable() {
   const initialFilters = {
     search: "",
-    province_id: null,
-    city_id: null,
-    district_id: null,
-    sub_district_id: null,
+    hotel_id: null,
     facilities: [],
     sort: null
   }
-
   const initialPagination = {
     pageIndex: 0,
     pageSize: 10,
   }
-
   const {
     data,
     loading,
@@ -37,13 +32,13 @@ export default function HotelsTable() {
     handlePaginationChange,
     refreshData,
     resetFilters,
-  } = useTableFilters(getHotels, initialFilters, initialPagination)
+  } = useTableFilters(getRoomTypes, initialFilters, initialPagination)
 
   if (error) {
     return (
       <div className="flex flex-col gap-6 p-6">
         <div className="text-center py-12">
-          <p className="text-red-500 mb-4">Error loading hotels: {error}</p>
+          <p className="text-red-500 mb-4">Error loading room types: {error}</p>
           <Button onClick={() => window.location.reload()}>
             Retry
           </Button>
@@ -57,13 +52,13 @@ export default function HotelsTable() {
       {/* Header Section */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Hotels</h2>
-          <p className="text-muted-foreground">Kelola properti hotel Anda</p>
+          <h2 className="text-2xl font-bold tracking-tight">Room Types</h2>
+          <p className="text-muted-foreground">Kelola tipe kamar hotel Anda</p>
         </div>
-        <Link href="/dashboard/hotels/create">
+        <Link href="/dashboard/room-types/create">
           <Button>
             <Plus className="mr-2 h-4 w-4" />
-            Tambah Hotel
+            Tambah Tipe Kamar
           </Button>
         </Link>
       </div>
@@ -83,13 +78,13 @@ export default function HotelsTable() {
           meta={{ refreshData }}
           searchConfig={{
             enabled: true, 
-            placeholder: "Cari hotel...",
+            placeholder: "Cari tipe kamar...",
             debounceMs: 500
           }}
           showColumnToggle={true}
-          emptyStateMessage="Tidak ada hotel yang ditemukan dengan filter saat ini."
+          emptyStateMessage="Tidak ada tipe kamar yang ditemukan dengan filter saat ini."
           className="min-h-[400px]"
-          filterComponent={<HotelFilters />}
+          filterComponent={<RoomTypeFilters />}
           isLoading={loading}
         />
       </div>

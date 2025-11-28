@@ -93,7 +93,7 @@ const data = {
             },
             {
               title: "Bed Type",
-              url: "/bed-types",
+              url: "/dashboard/bed-types",
             },
             {
               title: "Bookings",

@@ -69,7 +69,7 @@ export default function CreateBedTypePage() {
 
                     <div className="flex justify-end">
                         <Button type="submit" disabled={isSubmitting}>
-                            {isSubmitting ? "Menyimpan..." : "Simpan"}
+                            {isSubmitting ? "Menyimpan..." : "Save"}
                         </Button>
                     </div>
                 </form>

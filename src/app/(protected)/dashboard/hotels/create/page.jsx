@@ -17,6 +17,7 @@ import { getProvinces, getCities, getDistricts, getSubDistricts, getFacilities }
 import { createHotel } from "@/lib/services/hotel"
 import FacilitiesField from "@/components/facilities/FacilitiesField"
 import { Label } from "@/components/ui/label"
+import { toast } from "sonner"
 
 // --- Validasi Zod ---
 const schema = z.object({
@@ -96,9 +97,16 @@ export default function CreateHotelPage() {
       })
 
       await createHotel(formData)
+
+      toast.success("Hotel created successfully", {
+        description: "The new hotel has been added to the list."
+      })
       router.push("/dashboard/hotels")
     } catch (err) {
       console.error("❌ Failed to create hotel:", err)
+      toast.error("Failed to create hotel", {
+        description: err?.message || "An unexpected error occurred."
+      })
     }
   }
 

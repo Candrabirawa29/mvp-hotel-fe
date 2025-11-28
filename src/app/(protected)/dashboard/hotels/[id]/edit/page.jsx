@@ -16,6 +16,7 @@ import FacilitiesField from "@/components/facilities/FacilitiesField"
 import { getHotelById, updateHotel } from "@/lib/services/hotel"
 import { getProvinces, getCities, getDistricts, getSubDistricts, getFacilities } from "@/lib/services/reference"
 import { Label } from "@/components/ui/label"
+import { toast } from "sonner"
 
 const schema = z.object({
     name: z.string().min(1).max(50),
@@ -140,6 +141,9 @@ export default function UpdateHotelPage() {
             removedImages.forEach((id) => formData.append("remove_images[]", id))
 
             await updateHotel(params.id, formData)
+            toast.success("Hotel updated successfully", {
+                description: "The hotel details have been updated."
+            })
             router.push("/dashboard/hotels")
         } catch (err) {
             console.error("❌ Failed to update hotel:", err)

@@ -2,6 +2,7 @@ import { AppBreadcrumb } from "@/components/app-breadcrumb";
 import { AppSidebar } from "@/components/app-sidebar";
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { Toaster } from "sonner";
 
 export default function DashboardLayout({ children }) {
   return (
@@ -20,6 +21,7 @@ export default function DashboardLayout({ children }) {
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0 min-h-[100vh] rounded-xl md:min-h-min">
           <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min">
             {children}
+            <Toaster position="top-right" closeButton/>
           </div>
         </div>
       </SidebarInset>

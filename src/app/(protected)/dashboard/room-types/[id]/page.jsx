@@ -1,18 +1,19 @@
+// app/dashboard/room-types/[id]/page.jsx
 "use client";
-
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { getHotelById } from "@/lib/services/hotel";
+import { getRoomTypeById } from "@/lib/services/roomType";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
-export default function HotelDetailPage() {
+export default function RoomTypeDetailPage() {
   const { id } = useParams();
-  const [hotel, setHotel] = useState(null);
+  const [roomType, setRoomType] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showAllImages, setShowAllImages] = useState(false);
@@ -21,17 +22,17 @@ export default function HotelDetailPage() {
 
   useEffect(() => {
     if (!id) return;
-    const fetchHotel = async () => {
+    const fetchRoomType = async () => {
       try {
-        const data = await getHotelById(id);
-        setHotel(data);
+        const data = await getRoomTypeById(id);
+        setRoomType(data);
       } catch (err) {
-        setError(err.response?.data?.message || "Failed to load hotel");
+        setError(err.response?.data?.message || "Failed to load room type");
       } finally {
         setLoading(false);
       }
     };
-    fetchHotel();
+    fetchRoomType();
   }, [id]);
 
   const handleImageClick = (image) => {
@@ -43,46 +44,44 @@ export default function HotelDetailPage() {
     setIsDialogOpen(false);
     setTimeout(() => {
       setSelectedImage(null);
-    }, 300); // Sesuai dengan duration animasi
+    }, 300);
   };
 
-  if (loading) return <HotelDetailSkeleton />;
+  if (loading) return <RoomTypeDetailSkeleton />;
   if (error) return (
     <Alert variant="destructive" className="max-w-4xl mx-auto">
       <AlertDescription>{error}</AlertDescription>
     </Alert>
   );
 
-  const displayedImages = showAllImages 
-    ? hotel.images 
-    : hotel.images?.slice(0, 6);
-  const remainingImages = hotel.images?.length - 6;
+  const displayedImages = showAllImages
+    ? roomType.images
+    : roomType.images?.slice(0, 6);
+  const remainingImages = roomType.images?.length - 6;
 
   return (
     <div className="container max-w-6xl mx-auto p-6 space-y-6">
       {/* Header Section */}
       <div className="flex justify-between items-start">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">{hotel.name}</h1>
-          <p className="text-muted-foreground mt-2">{hotel.address}</p>
+          <h1 className="text-3xl font-bold tracking-tight">{roomType.name}</h1>
+          <p className="text-muted-foreground mt-2">Capacity: {roomType.capacity}</p>
         </div>
-        {hotel.rating && (
-          <Badge variant="secondary" className="text-sm">
-            Rating: {hotel.rating}
-          </Badge>
-        )}
+        <Badge variant="secondary" className="text-sm">
+          Hotel: {roomType.hotel?.name}
+        </Badge>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main Content */}
         <div className="lg:col-span-2 space-y-6">
           {/* Images Gallery */}
-          {hotel.images?.length > 0 && (
+          {roomType.images?.length > 0 && (
             <Card>
               <CardHeader>
                 <CardTitle>Gallery</CardTitle>
                 <CardDescription>
-                  {hotel.images.length} photos available
+                  {roomType.images.length} photos available
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -95,15 +94,15 @@ export default function HotelDetailPage() {
                     >
                       <img
                         src={`${process.env.NEXT_PUBLIC_URL}/storage/${img.image_url}`}
-                        alt={hotel.name}
+                        alt={roomType.name}
                         className="w-full h-32 object-cover rounded-lg transition-all duration-300 group-hover:scale-105 group-hover:shadow-lg"
                       />
-                      <div className="absolute inset-0  bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300 rounded-lg" />
+                      <div className="absolute inset-0 bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300 rounded-lg" />
                     </div>
                   ))}
                 </div>
                 
-                {hotel.images.length > 6 && (
+                {roomType.images.length > 6 && (
                   <div className="mt-4 text-center">
                     <Button 
                       variant="outline" 
@@ -124,42 +123,83 @@ export default function HotelDetailPage() {
               <CardTitle>Description</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-muted-foreground leading-relaxed">{hotel.description}</p>
+              <p className="text-muted-foreground leading-relaxed">{roomType.description || "No description available."}</p>
             </CardContent>
           </Card>
+
+          {/* Beds */}
+          {roomType.beds?.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Beds</CardTitle>
+                <CardDescription>
+                  {roomType.beds.length} bed configurations
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  {roomType.beds.map((bed) => (
+                    <div key={bed.id} className="flex justify-between">
+                      <span>{bed.bedType.name}</span>
+                      <span>x {bed.quantity}</span>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Prices */}
+          {roomType.prices?.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Prices</CardTitle>
+                <CardDescription>
+                  {roomType.prices.length} price periods
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Start Date</TableHead>
+                      <TableHead>End Date</TableHead>
+                      <TableHead>Weekday</TableHead>
+                      <TableHead>Weekend</TableHead>
+                      <TableHead>Currency</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {roomType.prices.map((price) => (
+                      <TableRow key={price.id}>
+                        <TableCell>{price.start_date}</TableCell>
+                        <TableCell>{price.end_date}</TableCell>
+                        <TableCell>{price.weekday_price}</TableCell>
+                        <TableCell>{price.weekend_price}</TableCell>
+                        <TableCell>{price.currency}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          )}
         </div>
 
         {/* Sidebar */}
         <div className="space-y-6">
-          {/* Contact Information */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Contact Information</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div>
-                <p className="font-medium text-sm">Phone Number</p>
-                <p className="text-muted-foreground">{hotel.phone_number}</p>
-              </div>
-              <div>
-                <p className="font-medium text-sm">Email</p>
-                <p className="text-muted-foreground">{hotel.email}</p>
-              </div>
-            </CardContent>
-          </Card>
-
           {/* Facilities */}
-          {hotel.facilities?.length > 0 && (
+          {roomType.facilities?.length > 0 && (
             <Card>
               <CardHeader>
                 <CardTitle>Facilities</CardTitle>
                 <CardDescription>
-                  {hotel.facilities.length} facilities available
+                  {roomType.facilities.length} facilities available
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="flex flex-wrap gap-2">
-                  {hotel.facilities.map((f) => (
+                  {roomType.facilities.map((f) => (
                     <Badge key={f.id} variant="outline">
                       {f.name}
                     </Badge>
@@ -181,7 +221,7 @@ export default function HotelDetailPage() {
               <div className="relative">
                 <img
                   src={`${process.env.NEXT_PUBLIC_URL}/storage/${selectedImage.image_url}`}
-                  alt={hotel.name}
+                  alt={roomType.name}
                   className="max-w-full max-h-[80vh] object-contain rounded-lg"
                 />
                 <Button
@@ -201,8 +241,8 @@ export default function HotelDetailPage() {
   );
 }
 
-// Skeleton Loading Component (tetap sama)
-function HotelDetailSkeleton() {
+// Skeleton Loading Component
+function RoomTypeDetailSkeleton() {
   return (
     <div className="container max-w-6xl mx-auto p-6 space-y-6">
       <div className="flex justify-between items-start">
