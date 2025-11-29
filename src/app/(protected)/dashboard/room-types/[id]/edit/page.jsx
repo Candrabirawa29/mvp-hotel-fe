@@ -129,7 +129,10 @@ export default function UpdateRoomTypePage() {
           for (let file of values.images) {
             formData.append("images[]", file)
           }
-        } else if (key === "facilities" || key === "beds" || key === "prices") {
+
+        } else if (key === "facilities") {
+          values.facilities.forEach((f) => formData.append("facilities[]", f))
+        } else if (key === "beds" || key === "prices") {
           values[key].forEach((item, index) => {
             Object.keys(item).forEach(subKey => {
               formData.append(`${key}[${index}][${subKey}]`, item[subKey])

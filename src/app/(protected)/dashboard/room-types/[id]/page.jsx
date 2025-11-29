@@ -140,7 +140,7 @@ export default function RoomTypeDetailPage() {
                 <div className="space-y-2">
                   {roomType.beds.map((bed) => (
                     <div key={bed.id} className="flex justify-between">
-                      <span>{bed.bedType.name}</span>
+                      <span>{bed.bedType?.name}</span>
                       <span>x {bed.quantity}</span>
                     </div>
                   ))}
