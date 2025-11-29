@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import FacilitiesField from "@/components/facilities/FacilitiesField"
 import { getRoomTypeById, updateRoomType } from "@/lib/services/roomType"
-import { getAllHotels, getRoomTypeFacilities, getBedTypes } from "@/lib/services/reference"
+import { getHotels, getRoomTypeFacilities, getBedTypes } from "@/lib/services/reference"
 import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
 import { Plus, Trash } from "lucide-react"
@@ -75,7 +75,7 @@ export default function UpdateRoomTypePage() {
   // fetch reference
   useEffect(() => {
     Promise.all([
-      getAllHotels(),
+      getHotels(),
       getBedTypes(),
       getRoomTypeFacilities()
     ]).then(([hotelsData, bedTypesData, facilitiesData]) => {
@@ -129,7 +129,10 @@ export default function UpdateRoomTypePage() {
           for (let file of values.images) {
             formData.append("images[]", file)
           }
-        } else if (key === "facilities" || key === "beds" || key === "prices") {
+
+        } else if (key === "facilities") {
+          values.facilities.forEach((f) => formData.append("facilities[]", f))
+        } else if (key === "beds" || key === "prices") {
           values[key].forEach((item, index) => {
             Object.keys(item).forEach(subKey => {
               formData.append(`${key}[${index}][${subKey}]`, item[subKey])
