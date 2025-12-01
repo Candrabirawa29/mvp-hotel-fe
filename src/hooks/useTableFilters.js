@@ -47,7 +47,7 @@ export function useTableFilters(
       const res = await fetchFunction(apiPage, cleanFilters, pagination.pageSize)
 
       // ✅ Handle different response structures
-      const responseData = res.users || res.hotels || res.bedTypes ||res.roomTypes || res.data || []
+      const responseData = res.users || res.hotels || res.bedTypes ||res.roomTypes || res.data || res.rooms || []
       const responseMeta = res.meta
 
       setData(responseData)

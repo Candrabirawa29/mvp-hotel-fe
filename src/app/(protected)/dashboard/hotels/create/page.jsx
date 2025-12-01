@@ -32,6 +32,7 @@ const schema = z.object({
   sub_district_id: z.number(),
   facilities: z.array(z.string()).nonempty("At least 1 facility required"),
   images: z.any().refine((files) => files?.length > 0, "At least 1 image required"),
+  password: z.string().min(8, "Password must be at least 8 characters")
 })
 
 export default function CreateHotelPage() {
@@ -286,6 +287,19 @@ export default function CreateHotelPage() {
             <Input type="file" multiple accept="image/*" {...register("images")} />
             {errors.images && <p className="text-sm text-red-500">{errors.images.message}</p>}
           </div>
+
+          {/* Password */}
+<div>
+  <Label>Password</Label>
+  <Input
+    placeholder="Password"
+    type="password"
+    {...register("password")}
+  />
+  {errors.password && (
+    <p className="text-sm text-red-500">{errors.password.message}</p>
+  )}
+</div>
 
           <div className="flex justify-end">
             <Button type="submit" disabled={isSubmitting}>

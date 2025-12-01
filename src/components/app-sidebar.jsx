@@ -81,7 +81,11 @@ const data = {
           items: [
             {
               title: "Room Type",
-              url: "/rooms",
+              url: "/dashboard/room-types",
+            },
+            {
+              title: "Rooms",
+              url: "/dashboard/rooms",
             },
             {
               title: "Room Price",

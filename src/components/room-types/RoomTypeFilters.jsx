@@ -18,7 +18,7 @@ import {
 
 export function RoomTypeFilters({ filters, onFiltersChange }) {
   const [hotels, setHotels] = useState([])
-  const [facilities, setFacilities] = useState([])
+  const [facilities, setFacilities] = useState([])  
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
