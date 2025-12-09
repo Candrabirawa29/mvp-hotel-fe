@@ -32,8 +32,8 @@ export const getRoomById = async (id) => {
   return res.data.data; // Laravel wrapper
 };
 
-export const createRoom = async (data) => {
-  const res = await api.post("/rooms", data);
+export const createRoom = async (hotelId, data) => {
+  const res = await api.post(`/hotel/${hotelId}/rooms`, data);
   return res.data;
 };
 

@@ -1,13 +1,14 @@
-"use client"
+"use client";
 
-import { columns } from "./columns"
-import { getHotels } from "@/lib/services/hotel"
-import { DataTable } from "@/components/common/data-table"
-import { HotelFilters } from "@/components/hotels/HotelFilters"
-import { useTableFilters } from "@/hooks/useTableFilters"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Plus } from "lucide-react"
+import { columns } from "./columns";
+import { getHotels } from "@/lib/services/hotel";
+import { DataTable } from "@/components/common/data-table";
+import { HotelFilters } from "@/components/hotels/HotelFilters";
+import { useTableFilters } from "@/hooks/useTableFilters";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import { useEffect } from "react";
 
 export default function HotelsTable() {
   const initialFilters = {
@@ -17,13 +18,13 @@ export default function HotelsTable() {
     district_id: null,
     sub_district_id: null,
     facilities: [],
-    sort: null
-  }
+    sort: null,
+  };
 
   const initialPagination = {
     pageIndex: 0,
     pageSize: 10,
-  }
+  };
 
   const {
     data,
@@ -37,20 +38,27 @@ export default function HotelsTable() {
     handlePaginationChange,
     refreshData,
     resetFilters,
-  } = useTableFilters(getHotels, initialFilters, initialPagination)
+  } = useTableFilters(getHotels, initialFilters, initialPagination);
 
   if (error) {
     return (
       <div className="flex flex-col gap-6 p-6">
         <div className="text-center py-12">
           <p className="text-red-500 mb-4">Error loading hotels: {error}</p>
-          <Button onClick={() => window.location.reload()}>
-            Retry
-          </Button>
+          <Button onClick={() => window.location.reload()}>Retry</Button>
         </div>
       </div>
-    )
+    );
   }
+
+  useEffect(() => {
+    async function fetchData() {
+      const o = await getHotels();
+      console.log("Data Hotel:", o);
+    }
+
+    fetchData();
+  }, []);
 
   return (
     <div className="flex flex-col gap-6 p-6">
@@ -76,15 +84,15 @@ export default function HotelsTable() {
           pageCount={pageMeta.last_page}
           state={{
             pagination,
-            filters
+            filters,
           }}
           onPaginationChange={handlePaginationChange}
-          onFiltersChange={handleFiltersReplace} 
+          onFiltersChange={handleFiltersReplace}
           meta={{ refreshData }}
           searchConfig={{
-            enabled: true, 
+            enabled: true,
             placeholder: "Cari hotel...",
-            debounceMs: 500
+            debounceMs: 500,
           }}
           showColumnToggle={true}
           emptyStateMessage="Tidak ada hotel yang ditemukan dengan filter saat ini."
@@ -94,5 +102,5 @@ export default function HotelsTable() {
         />
       </div>
     </div>
-  )
+  );
 }

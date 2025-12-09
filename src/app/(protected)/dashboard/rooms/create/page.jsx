@@ -95,6 +95,10 @@ export default function CreateRoomPage() {
   const watchedValues = watch();
 
   useEffect(() => {
+    console.log("🔵 BASE URL:", process.env.NEXT_PUBLIC_API_URL);
+  import("@/lib/api").then(({ default: api }) => {
+    console.log("🔵 AXIOS BASE URL:", api.defaults.baseURL);
+  });
     const loadRoomTypes = async () => {
       try {
         setIsLoading(true);
@@ -154,7 +158,13 @@ export default function CreateRoomPage() {
       console.log("📤 Final payload sent to API:", submitData);
 
       try {
-        const result = await createRoom(submitData);
+        // ✅ FIX: Tambahkan hotelId sebagai parameter pertama
+        // TODO: Ganti dengan cara ambil hotelId dari context/localStorage
+        const hotelId = typeof window !== 'undefined' ? localStorage.getItem('hotel_id') || 1 : 1;
+        
+        console.log("🏨 Hotel ID:", hotelId);
+        
+        const result = await createRoom(hotelId, submitData);
         console.log("✅ API SUCCESS:", result);
         
         toast.success(`Berhasil membuat ${getCreatedCount(data)} kamar`);
@@ -177,6 +187,10 @@ export default function CreateRoomPage() {
             } else {
               toast.error(apiErr.response.data?.message || "Validasi gagal");
             }
+          } else if (apiErr.response.status === 404) {
+            toast.error("Endpoint tidak ditemukan. Pastikan hotel_id sudah benar.");
+          } else if (apiErr.response.status === 403) {
+            toast.error("Anda tidak memiliki akses ke hotel ini.");
           } else if (apiErr.response.status === 500) {
             toast.error("Server error. Silakan coba lagi nanti.");
           } else {

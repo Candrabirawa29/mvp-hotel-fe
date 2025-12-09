@@ -22,7 +22,7 @@ import { toast } from "sonner"
 // --- Validasi Zod ---
 const schema = z.object({
   name: z.string().min(1, "Name is required").max(50),
-  description: z.string().min(1, "Description is required").max(255),
+  description: z.string().min(1, "Description is required").max(1255),
   address: z.string().min(1, "Address is required").max(255),
   phone_number: z.string().min(10).max(13),
   email: z.email(),

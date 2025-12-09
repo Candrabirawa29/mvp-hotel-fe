@@ -60,7 +60,7 @@ export const createRoomType = async (data) => {
 
 export const updateRoomType = async (id, data) => {
   try {
-    const res = await api.put(`/room-types/${id}`, data);
+    const res = await api.post(`/room-types/${id}`, data);
     return res.data.data;
   } catch (error) {
     console.error("Error updating room type:", error);

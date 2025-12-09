@@ -20,7 +20,7 @@ import { toast } from "sonner"
 
 const schema = z.object({
     name: z.string().min(1).max(50),
-    description: z.string().min(1).max(255),
+    description: z.string().min(1).max(1255),
     address: z.string().min(1).max(255),
     phone_number: z.string().min(10).max(13),
     email: z.string().email(),

@@ -52,7 +52,6 @@ export async function createHotel(payload) {
 
 // Update hotel
 export async function updateHotel(id, payload) {
-  // payload harus FormData (supaya bisa handle file upload + remove_images)
   const res = await api.post(`/hotels/${id}`, payload, {
     headers: {
       "Content-Type": "multipart/form-data",
